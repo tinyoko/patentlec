@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>特許制度学習アプリ</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>"&gt;
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'chat_app/styles.css' %}">
+    <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/plugin/wavesurfer.regions.min.js"></script>
+</head>
+<body>
+    <div class="container" style="display: flex !important; flex-direction: row !important; width: 100vw; box-sizing: border-box;">
+        <!-- 左側：音声プレイヤー -->
+        <div class="audio-section" style="width: 50%; flex: 1 1 50%; min-width: 400px;">
+            <h2>講義音声プレイヤー</h2>
+            <div id="waveform"></div>
+            
+            <div class="controls">
+                <button id="playButton">再生</button>
+                <button id="pauseButton">一時停止・再開</button>
+                <label>
+                    <input type="checkbox" id="loopCheckbox"> ループ再生
+                </label>
+            </div>
+            
+            <div class="time-display">
+                <div class="time-info">
+                    <span>開始時間: <span id="startTimeDisplay">00:00</span></span>
+                    <span>終了時間: <span id="endTimeDisplay">00:00</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右側：チャットインターフェース -->
+        <div class="chat-section" style="width: 50%; flex: 1 1 50%; min-width: 400px;">
+            <h2>特許制度チャットボット</h2>
+            <div id="chatHistory" class="chat-history"></div>
+            <div class="chat-input">
+                <input type="text" id="messageInput" placeholder="特許制度について質問してください..." />
+                <button id="sendButton">送信</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'chat_app/main.js' %}"></script>
+</body>
+</html>
