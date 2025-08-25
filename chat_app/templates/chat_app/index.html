@@ -6,42 +6,355 @@
     <title>特許制度学習アプリ</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>"&gt;
     {% load static %}
-    <link rel="stylesheet" href="{% static 'chat_app/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'chat_app/styles.css' %}?v=2">
+    <style>
+        /* CSS変数によるデザインシステム */
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #e74c3c;
+            --secondary-dark: #c0392b;
+            --success-color: #27ae60;
+            --success-dark: #229954;
+            --warning-color: #f39c12;
+            --text-primary: #2c3e50;
+            --text-secondary: #7f8c8d;
+            --background-primary: #ffffff;
+            --background-secondary: #f8f9fa;
+            --background-app: #f5f5f5;
+            --border-color: #e9ecef;
+            --spacing-xs: 0.25rem;
+            --spacing-sm: 0.5rem;
+            --spacing-md: 1rem;
+            --spacing-lg: 1.5rem;
+            --spacing-xl: 2rem;
+            --font-family-primary: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-monospace: 'SF Mono', Monaco, 'Cascadia Code', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --border-radius-sm: 0.25rem;
+            --border-radius-md: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --box-shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
+            --box-shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+            --transition-base: 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-primary);
+            background-color: var(--background-app);
+            color: var(--text-primary);
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .app-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            height: 100vh;
+            padding: var(--spacing-xl);
+            background-color: var(--background-app);
+            box-sizing: border-box;
+        }
+
+        .section {
+            background: var(--background-primary);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--box-shadow-md);
+            padding: var(--spacing-xl);
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .section-header {
+            margin-bottom: var(--spacing-lg);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: var(--spacing-md);
+        }
+
+        .section-header h2 {
+            color: var(--text-primary);
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin: 0;
+            text-align: center;
+        }
+
+        .waveform-container {
+            flex: 1;
+            min-height: 120px;
+            margin-bottom: var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            background: var(--background-secondary);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+
+        .control-button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            font-size: var(--font-size-base);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            min-width: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+
+        .control-button:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: var(--box-shadow-sm);
+        }
+
+        .control-button--pause {
+            background: var(--secondary-color);
+        }
+
+        .control-button--pause:hover {
+            background: var(--secondary-dark);
+        }
+
+        .loop-control {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .loop-checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .time-display {
+            background: linear-gradient(135deg, var(--background-secondary), #e8f4f8);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+        }
+
+        .time-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-lg);
+            text-align: center;
+        }
+
+        .time-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .time-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .time-value {
+            font-family: var(--font-family-monospace);
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .chat-interface {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .chat-messages {
+            flex: 1;
+            background: var(--background-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            overflow-y: auto;
+            margin-bottom: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .message,
+        .user-message,
+        .bot-message,
+        .loading-message {
+            max-width: 80%;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-lg);
+            word-wrap: break-word;
+        }
+
+        .message--user,
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-bottom-right-radius: var(--border-radius-sm);
+        }
+
+        .message--bot,
+        .bot-message {
+            align-self: flex-start;
+            background: var(--background-primary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-bottom-left-radius: var(--border-radius-sm);
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .message--loading,
+        .loading-message {
+            align-self: flex-start;
+            background: var(--warning-color);
+            color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.02); }
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: stretch;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius-md);
+            font-size: var(--font-size-base);
+            font-family: var(--font-family-primary);
+            transition: border-color var(--transition-base);
+            background: var(--background-primary);
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .send-button {
+            background: linear-gradient(135deg, var(--success-color), var(--success-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md) var(--spacing-xl);
+            font-size: var(--font-size-base);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            min-width: 80px;
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: translateY(-1px);
+            box-shadow: var(--box-shadow-md);
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto;
+                height: auto;
+                min-height: 100vh;
+                gap: var(--spacing-lg);
+                padding: var(--spacing-lg);
+            }
+            .section {
+                padding: var(--spacing-lg);
+            }
+        }
+    </style>
     <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/wavesurfer.min.js"></script>
     <script src="https://unpkg.com/wavesurfer.js@6.6.4/dist/plugin/wavesurfer.regions.min.js"></script>
 </head>
 <body>
-    <div class="container" style="display: flex !important; flex-direction: row !important; width: 100vw; box-sizing: border-box;">
-        <!-- 左側：音声プレイヤー -->
-        <div class="audio-section" style="width: 50%; flex: 1 1 50%; min-width: 400px;">
-            <h2>講義音声プレイヤー</h2>
-            <div id="waveform"></div>
+    <div class="app-container">
+        <!-- 左側：音声プレイヤーセクション -->
+        <section class="section audio-player-section">
+            <header class="section-header">
+                <h2>講義音声プレイヤー</h2>
+            </header>
             
-            <div class="controls">
-                <button id="playButton">再生</button>
-                <button id="pauseButton">一時停止・再開</button>
-                <label>
-                    <input type="checkbox" id="loopCheckbox"> ループ再生
+            <div class="waveform-container" id="waveform"></div>
+            
+            <div class="player-controls">
+                <button id="playButton" class="control-button control-button--play">再生</button>
+                <button id="pauseButton" class="control-button control-button--pause">一時停止・再開</button>
+                <label class="loop-control">
+                    <input type="checkbox" id="loopCheckbox" class="loop-checkbox"> 
+                    <span class="loop-label">ループ再生</span>
                 </label>
             </div>
             
             <div class="time-display">
                 <div class="time-info">
-                    <span>開始時間: <span id="startTimeDisplay">00:00</span></span>
-                    <span>終了時間: <span id="endTimeDisplay">00:00</span></span>
+                    <div class="time-item">
+                        <span class="time-label">開始時間</span>
+                        <span class="time-value" id="startTimeDisplay">00:00</span>
+                    </div>
+                    <div class="time-item">
+                        <span class="time-label">終了時間</span>
+                        <span class="time-value" id="endTimeDisplay">00:00</span>
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- 右側：チャットインターフェース -->
-        <div class="chat-section" style="width: 50%; flex: 1 1 50%; min-width: 400px;">
-            <h2>特許制度チャットボット</h2>
-            <div id="chatHistory" class="chat-history"></div>
-            <div class="chat-input">
-                <input type="text" id="messageInput" placeholder="特許制度について質問してください..." />
-                <button id="sendButton">送信</button>
+        <section class="section chat-section">
+            <header class="section-header">
+                <h2>特許制度チャットボット</h2>
+            </header>
+            
+            <div class="chat-interface">
+                <div id="chatHistory" class="chat-messages"></div>
+                <div class="chat-input-container">
+                    <input type="text" id="messageInput" class="chat-input" placeholder="特許制度について質問してください..." />
+                    <button id="sendButton" class="send-button">送信</button>
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 
     <script src="{% static 'chat_app/main.js' %}"></script>
