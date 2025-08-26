@@ -92,20 +92,28 @@
         }
 
         .waveform-container {
-            flex: 1;
-            min-height: 120px;
-            margin-bottom: var(--spacing-lg);
+            height: 60px;
+            min-height: 60px;
+            margin: 0 0 12px 0;
             border: 2px solid var(--border-color);
             border-radius: var(--border-radius-md);
             background: var(--background-secondary);
         }
 
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 0 0 12px 0;
+            gap: var(--spacing-md);
+        }
+
         .player-controls {
             display: flex;
             align-items: center;
-            justify-content: center;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-lg);
+            justify-content: flex-start;
+            gap: var(--spacing-sm);
+            padding: 0;
             flex-wrap: wrap;
         }
 
@@ -113,13 +121,13 @@
             background: var(--primary-color);
             color: white;
             border: none;
-            border-radius: var(--border-radius-md);
-            padding: var(--spacing-sm) var(--spacing-lg);
-            font-size: var(--font-size-base);
+            border-radius: var(--border-radius-sm);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            font-size: var(--font-size-sm);
             font-weight: 500;
             cursor: pointer;
             transition: all var(--transition-base);
-            min-width: 100px;
+            min-width: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -143,48 +151,52 @@
         .loop-control {
             display: flex;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: 4px;
             cursor: pointer;
-            font-size: var(--font-size-base);
+            font-size: 11px;
             color: var(--text-primary);
             font-weight: 500;
+            white-space: nowrap;
+            padding: 4px 8px;
         }
 
         .loop-checkbox {
-            width: 16px;
-            height: 16px;
+            width: 12px;
+            height: 12px;
             cursor: pointer;
         }
 
         .time-display {
             background: linear-gradient(135deg, var(--background-secondary), #e8f4f8);
             border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-md);
-            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--spacing-xs);
         }
 
-        .time-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: var(--spacing-lg);
-            text-align: center;
-        }
 
         .time-item {
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-xs);
+            gap: 2px;
+            padding: 4px 8px;
+            text-align: center;
         }
 
         .time-label {
-            font-size: var(--font-size-sm);
+            font-size: 10px;
             color: var(--text-secondary);
             font-weight: 500;
         }
 
         .time-value {
             font-family: var(--font-family-monospace);
-            font-size: var(--font-size-lg);
+            font-size: 12px;
             font-weight: 700;
             color: var(--text-primary);
         }
@@ -216,6 +228,7 @@
             padding: var(--spacing-md) var(--spacing-lg);
             border-radius: var(--border-radius-lg);
             word-wrap: break-word;
+            font-size: 12px;
         }
 
         .message--user,
@@ -316,29 +329,29 @@
                 <h2>講義音声プレイヤー</h2>
             </header>
             
-            <div class="waveform-container" id="waveform"></div>
-            
-            <div class="player-controls">
-                <button id="playButton" class="control-button control-button--play">再生</button>
-                <button id="pauseButton" class="control-button control-button--pause">一時停止・再開</button>
-                <label class="loop-control">
-                    <input type="checkbox" id="loopCheckbox" class="loop-checkbox"> 
-                    <span class="loop-label">ループ再生</span>
-                </label>
-            </div>
-            
-            <div class="time-display">
-                <div class="time-info">
+            <div class="controls-row">
+                <div class="player-controls">
+                    <button id="playButton" class="control-button control-button--play">再生</button>
+                    <button id="pauseButton" class="control-button control-button--pause">一時停止・再開</button>
+                </div>
+                
+                <div class="time-display">
                     <div class="time-item">
                         <span class="time-label">開始時間</span>
                         <span class="time-value" id="startTimeDisplay">00:00</span>
                     </div>
+                    <label class="loop-control">
+                        <input type="checkbox" id="loopCheckbox" class="loop-checkbox"> 
+                        <span class="loop-label">ループ再生</span>
+                    </label>
                     <div class="time-item">
                         <span class="time-label">終了時間</span>
                         <span class="time-value" id="endTimeDisplay">00:00</span>
                     </div>
                 </div>
             </div>
+            
+            <div class="waveform-container" id="waveform"></div>
         </section>
 
         <!-- 右側：チャットインターフェース -->
