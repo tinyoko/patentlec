@@ -16,8 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('chat_app.urls')),
 ]
+
+# 開発環境での静的ファイル配信
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATICFILES_DIRS[0])
+    
+    # 動画ファイル用の明示的なMIMEタイプ設定
+    import mimetypes
+    mimetypes.add_type("video/mp4", ".mp4")
+    mimetypes.add_type("audio/mp3", ".mp3")

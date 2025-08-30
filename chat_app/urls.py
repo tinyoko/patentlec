@@ -4,4 +4,5 @@ from . import views
 urlpatterns = [
     path('', views.index, name='index'),
     path('chat/', views.chat_api, name='chat_api'),
+    path('video/<str:filename>', views.serve_video, name='serve_video'),
 ]

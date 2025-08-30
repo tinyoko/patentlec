@@ -1,10 +1,12 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from django.views.decorators.csrf import csrf_exempt
 import json
 import requests
 import re
 import os
+import mimetypes
+from django.conf import settings
 
 def index(request):
     return render(request, 'chat_app/index.html')
@@ -67,3 +69,33 @@ def chat_api(request):
             return JsonResponse({"error": f"エラーが発生しました: {str(e)}"}, status=500)
     
     return JsonResponse({"error": "POSTリクエストが必要です"}, status=405)
+
+def serve_video(request, filename):
+    """動画ファイルを正しいMIMEタイプで配信するビュー"""
+    try:
+        # ファイルパスを構築
+        static_path = os.path.join(settings.BASE_DIR, 'chat_app', 'static', 'chat_app', filename)
+        
+        # ファイルが存在するかチェック
+        if not os.path.exists(static_path):
+            raise Http404("動画ファイルが見つかりません")
+        
+        # MIMEタイプを決定
+        mime_type, _ = mimetypes.guess_type(filename)
+        if not mime_type:
+            if filename.endswith('.mp4'):
+                mime_type = 'video/mp4'
+            elif filename.endswith('.mp3'):
+                mime_type = 'audio/mp3'
+            else:
+                mime_type = 'application/octet-stream'
+        
+        # ファイルを読み込んで返す
+        with open(static_path, 'rb') as video_file:
+            response = HttpResponse(video_file.read(), content_type=mime_type)
+            response['Content-Length'] = os.path.getsize(static_path)
+            response['Accept-Ranges'] = 'bytes'
+            return response
+            
+    except Exception as e:
+        raise Http404(f"動画ファイルの配信エラー: {str(e)}")
